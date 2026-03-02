@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title layout:title-pattern="$CONTENT_TITLE - Shop App">Shop App</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-brand">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/products}">Products</a>
+        <a th:href="@{/categories}">Categories</a>
+    </div>
+    <form class="search-form" th:action="@{/products}" method="get">
+        <input class="search-input" type="text" name="keyword" placeholder="Search..." th:value="${keyword}"/>
+        <button class="btn btn-search" type="submit">Search</button>
+    </form>
+</nav>
+
+<div class="container">
+    <div layout:fragment="content"></div>
+</div>
+
+<footer>
+    <p>© 2025 - Phát triển ứng dụng với J2EE</p>
+</footer>
+
+</body>
+</html>
