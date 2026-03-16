@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<head>
+    <title>Sửa Học phần</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="main-container">
+            <div style="max-width:600px; margin:0 auto">
+
+                <div class="page-header">
+                    <h1 class="page-title">✏️ Sửa Học phần</h1>
+                    <p class="page-subtitle">Cập nhật thông tin học phần</p>
+                </div>
+
+                <div class="form-card" style="max-width:none">
+                    <form th:action="@{/admin/courses/edit/{id}(id=${course.id})}" th:object="${course}" method="post"
+                        enctype="multipart/form-data">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                        <div class="form-group">
+                            <label class="form-label">Tên học phần *</label>
+                            <input type="text" th:field="*{name}" class="form-control" required />
+                            <span class="form-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem">
+                            <div class="form-group">
+                                <label class="form-label">Số tín chỉ *</label>
+                                <input type="number" th:field="*{credits}" class="form-control" min="1" max="10"
+                                    required />
+                                <span class="form-error" th:if="${#fields.hasErrors('credits')}"
+                                    th:errors="*{credits}"></span>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Danh mục</label>
+                                <select th:field="*{category}" class="form-control">
+                                    <option value="">-- Chọn danh mục --</option>
+                                    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"
+                                        th:selected="${course.category != null and course.category.id == cat.id}">Danh
+                                        mục</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Giảng viên *</label>
+                            <input type="text" th:field="*{lecturer}" class="form-control" required />
+                            <span class="form-error" th:if="${#fields.hasErrors('lecturer')}"
+                                th:errors="*{lecturer}"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <div th:if="${course.image != null and !course.image.isEmpty()}"
+                                style="margin-bottom:0.5rem">
+                                <label class="form-label">Ảnh hiện tại</label>
+                                <img th:src="${course.image}" alt="Ảnh hiện tại"
+                                    style="height:80px; border-radius:8px; object-fit:cover; display:block; margin-top:0.3rem" />
+                            </div>
+                            <label class="form-label" style="margin-top:0.5rem">Tải ảnh mới (tùy chọn)</label>
+                            <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                            <p class="form-text">Để trống sẽ giữ ảnh cũ.</p>
+                        </div>
+
+                        <div style="display:flex; gap:1rem; margin-top:0.5rem">
+                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                            <a th:href="@{/admin/courses}" class="btn btn-secondary">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

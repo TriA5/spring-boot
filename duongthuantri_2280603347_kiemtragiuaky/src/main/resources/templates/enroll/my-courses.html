@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<head>
+    <title>Học phần của tôi</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="main-container">
+
+            <div class="page-header">
+                <h1 class="page-title">📚 Học phần của tôi</h1>
+                <p class="page-subtitle">Các học phần bạn đã đăng ký</p>
+            </div>
+
+            <div th:if="${enrollments != null and !enrollments.isEmpty()}" class="enrolled-grid">
+                <div class="enrolled-card" th:each="enrollment : ${enrollments}">
+                    <div class="img-wrapper">
+                        <img th:if="${enrollment.course.image != null and !enrollment.course.image.isEmpty()}"
+                            th:src="${enrollment.course.image}" th:alt="${enrollment.course.name}"
+                            class="course-card-img"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+                        <div class="course-card-img-placeholder"
+                            th:style="${enrollment.course.image != null and !enrollment.course.image.isEmpty()} ? 'display:none' : ''">
+                            🎓</div>
+                        <span class="enrolled-badge">✅ Đã đăng ký</span>
+                    </div>
+                    <div class="course-card-body">
+                        <div class="course-card-name" th:text="${enrollment.course.name}">Tên học phần</div>
+                        <div class="course-card-meta">
+                            <span class="meta-item">
+                                <i class="icon">⭐</i>
+                                <span th:text="${enrollment.course.credits} + ' tín chỉ'">3 tín chỉ</span>
+                            </span>
+                            <span class="meta-item">
+                                <i class="icon">👨‍🏫</i>
+                                <span th:text="${enrollment.course.lecturer}">Giảng viên</span>
+                            </span>
+                            <span class="meta-item" th:if="${enrollment.course.category != null}">
+                                <i class="icon">📂</i>
+                                <span class="badge badge-primary" th:text="${enrollment.course.category.name}">Danh
+                                    mục</span>
+                            </span>
+                            <span class="meta-item">
+                                <i class="icon">📅</i>
+                                <span
+                                    th:text="'Đăng ký: ' + ${#temporals.format(enrollment.enrollDate, 'dd/MM/yyyy')}">Ngày</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div th:if="${enrollments == null or enrollments.isEmpty()}" class="empty-state">
+                <div class="icon">📭</div>
+                <h3>Chưa có học phần nào</h3>
+                <p>Bạn chưa đăng ký học phần nào.</p>
+                <a th:href="@{/home}" class="btn btn-primary" style="margin-top:1rem">Khám phá học phần</a>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
