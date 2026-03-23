@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/main}">
+
+<head>
+    <title>Admin Dashboard</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <h2 class="page-title">⚙️ Admin Dashboard</h2>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-value" th:text="${totalOrders}">0</div>
+                <div class="stat-label">Tổng đơn hàng</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏳</div>
+                <div class="stat-value" th:text="${pendingOrders}">0</div>
+                <div class="stat-label">Đơn chờ xử lý</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value" th:text="${totalUsers}">0</div>
+                <div class="stat-label">Tổng thành viên</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value"
+                    th:text="${#numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT') + ' ₫'}">0</div>
+                <div class="stat-label">Doanh thu (đã giao)</div>
+            </div>
+        </div>
+
+        <div class="admin-links">
+            <a th:href="@{/admin/orders}" class="btn btn-primary">📋 Quản lý đơn hàng</a>
+            <a th:href="@{/admin/users}" class="btn btn-secondary">👥 Quản lý người dùng</a>
+            <a th:href="@{/products}" class="btn btn-secondary">🛍️ Quản lý sản phẩm</a>
+            <a th:href="@{/categories}" class="btn btn-secondary">📂 Quản lý danh mục</a>
+        </div>
+    </div>
+</body>
+
+</html>

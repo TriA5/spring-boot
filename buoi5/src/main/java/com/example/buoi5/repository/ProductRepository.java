@@ -1,15 +1,27 @@
 package com.example.buoi5.repository;
 
 import com.example.buoi5.model.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-    List<Product> searchByName(String keyword);
+    // Tìm kiếm theo tên (có phân trang + sắp xếp)
+    Page<Product> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
+
+    // Lọc theo category (có phân trang + sắp xếp)
+    Page<Product> findByCategoryId(Long categoryId, Pageable pageable);
+
+    // Tìm kiếm theo tên VÀ lọc theo category (có phân trang + sắp xếp)
+    @Query("SELECT p FROM Product p WHERE " +
+            "(:keyword IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%'))) AND " +
+            "(:categoryId IS NULL OR p.category.id = :categoryId)")
+    Page<Product> findWithFilters(@Param("keyword") String keyword,
+            @Param("categoryId") Long categoryId,
+            Pageable pageable);
 }

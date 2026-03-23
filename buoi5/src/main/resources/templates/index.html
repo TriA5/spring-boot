@@ -1,21 +1,66 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{layout/main}">
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{layout/main}">
 
 <head>
-    <title>Home</title>
+    <title>Trang chủ</title>
 </head>
 
 <body>
     <div layout:fragment="content">
+
+        <!-- Hero -->
         <div class="hero">
-            <h1>Chào mừng đến với Shop App 🛍️</h1>
-            <p>Quản lý sản phẩm và danh mục dễ dàng với Spring Boot + JPA</p>
+            <h1>Chào mừng đến với ShopApp 🛍️</h1>
+            <p>Khám phá hàng ngàn sản phẩm chất lượng với giá tốt nhất!</p>
             <div class="hero-actions">
-                <a th:href="@{/products}" class="btn btn-primary">Xem Sản Phẩm</a>
-                <a th:href="@{/categories}" class="btn btn-secondary">Xem Danh Mục</a>
+                <a th:href="@{/products}" class="btn btn-primary">Xem tất cả sản phẩm</a>
             </div>
         </div>
+
+        <!-- Featured Products — 4 cột cố định -->
+        <div th:if="${!products.isEmpty()}">
+            <h2 class="section-title">🔥 Sản phẩm nổi bật</h2>
+            <div class="home-grid">
+                <div class="product-card" th:each="product : ${products}">
+                    <div class="product-card-img-wrapper">
+                        <img th:if="${product.image != null and !#strings.isEmpty(product.image)}"
+                            th:src="${product.image}" th:alt="${product.name}" class="product-card-img" />
+                        <div th:unless="${product.image != null and !#strings.isEmpty(product.image)}"
+                            class="product-card-no-img">📦</div>
+                    </div>
+                    <div class="product-card-body">
+                        <span class="product-card-category"
+                            th:text="${product.category != null ? product.category.name : ''}"></span>
+                        <h3 class="product-card-name" th:text="${product.name}"></h3>
+                        <p class="product-card-price"
+                            th:text="${#numbers.formatDecimal(product.price,0,'COMMA',0,'POINT') + ' ₫'}"></p>
+                        <div class="product-card-actions">
+                            <!-- Nút thêm giỏ cho user -->
+                            <div sec:authorize="isAuthenticated() and !hasAuthority('ROLE_ADMIN')">
+                                <form th:action="@{/cart/add/{id}(id=${product.id})}" method="post"
+                                    style="display:flex;align-items:center;gap:4px;">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                    <input type="number" name="quantity" value="1" min="1" max="99" class="qty-input" />
+                                    <button type="submit" class="btn btn-primary btn-sm">🛒 Thêm</button>
+                                </form>
+                            </div>
+                            <a th:href="@{/products}" class="btn btn-secondary btn-sm">Chi tiết</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Xem thêm -->
+            <div style="text-align:center; margin-top:24px;">
+                <a th:href="@{/products}" class="btn btn-secondary">Xem tất cả sản phẩm →</a>
+            </div>
+        </div>
+
+        <div th:if="${products.isEmpty()}" class="empty-state">
+            <p>Chưa có sản phẩm nào. Hãy thêm sản phẩm mới!</p>
+        </div>
+
     </div>
 </body>
 

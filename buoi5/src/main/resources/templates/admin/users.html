@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/main}">
+
+<head>
+    <title>Quản lý người dùng</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="page-header">
+            <h2 class="page-title">👥 Quản lý người dùng</h2>
+            <a th:href="@{/admin}" class="btn btn-secondary">← Quay lại</a>
+        </div>
+
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Vai trò</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.id}"></td>
+                        <td th:text="${user.username}"></td>
+                        <td th:text="${user.email}"></td>
+                        <td>
+                            <span class="badge"
+                                th:classappend="${user.role.name() == 'ROLE_ADMIN' ? 'badge-danger' : 'badge-info'}"
+                                th:text="${user.role.name() == 'ROLE_ADMIN' ? 'Admin' : 'User'}"></span>
+                        </td>
+                        <td>
+                            <span class="badge" th:classappend="${user.enabled ? 'badge-success' : 'badge-warning'}"
+                                th:text="${user.enabled ? 'Hoạt động' : 'Khóa'}"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>
